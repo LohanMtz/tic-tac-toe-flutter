@@ -6,12 +6,19 @@ import 'package:tictactoe/enums/player_type.dart';
 import 'package:tictactoe/enums/winner_type.dart';
 import 'package:tictactoe/models/board_tile.dart';
 
+import '../enums/player_type.dart';
+
 class GameController {
   List<BoardTile> tiles = [];
   List<int> movesPlayer1 = [];
   List<int> movesPlayer2 = [];
   PlayerType currentPlayer;
   bool isSinglePlayer;
+  String currentPlayerName;
+  int winsPlayer1 = 0;
+  int winsPlayer2 = 0;
+
+  bool get isBotTurn => isSinglePlayer && currentPlayer == PlayerType.player2;
 
   bool get hasMoves =>
       (movesPlayer1.length + movesPlayer2.length) != BOARD_SIZE;
@@ -24,6 +31,7 @@ class GameController {
     movesPlayer1.clear();
     movesPlayer2.clear();
     currentPlayer = PlayerType.player1;
+    currentPlayerName = "Player 1";
     isSinglePlayer = false;
     tiles =
         List<BoardTile>.generate(BOARD_SIZE, (index) => BoardTile(index + 1));
@@ -49,6 +57,7 @@ class GameController {
     tile.color = PLAYER1_COLOR;
     movesPlayer1.add(tile.id);
     currentPlayer = PlayerType.player2;
+    currentPlayerName = "Player 2";
   }
 
   void _markBoardTileWithPlayer2(BoardTile tile) {
@@ -56,6 +65,7 @@ class GameController {
     tile.color = PLAYER2_COLOR;
     movesPlayer2.add(tile.id);
     currentPlayer = PlayerType.player1;
+    currentPlayerName = "Player 1";
   }
 
   bool _checkPlayerWinner(List<int> moves) {
@@ -66,8 +76,15 @@ class GameController {
   }
 
   WinnerType checkWinner() {
-    if (_checkPlayerWinner(movesPlayer1)) return WinnerType.player1;
-    if (_checkPlayerWinner(movesPlayer2)) return WinnerType.player2;
+    if (_checkPlayerWinner(movesPlayer1)) {
+      winsPlayer1++;
+      return WinnerType.player1;
+    }
+
+    if (_checkPlayerWinner(movesPlayer2)) {
+      winsPlayer2++;
+      return WinnerType.player2;
+    }
     return WinnerType.none;
   }
 

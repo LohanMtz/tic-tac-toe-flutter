@@ -8,7 +8,7 @@ class BoardTile {
 
   BoardTile(
     this.id, {
-    this.symbol = '',
+    this.symbol = 'assets/blankimage.png',
     this.color = Colors.black26,
     this.enable = true,
   });
